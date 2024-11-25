@@ -1,5 +1,10 @@
 package command
 
+const (
+	CommandName = "ager"
+	Name        = "Agricola"
+)
+
 // A Command is a runnable sub-command of the CLI.
 //
 // The Command interface is based on `mitchellh/cli` by Mitchell Hashimoto.
