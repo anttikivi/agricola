@@ -7,6 +7,10 @@ LICENSEI_VERSION = 0.9.0
 build:
 	go build -o ager ./main.go
 
+.PHONY: golangci-lint
+golangci-lint:
+	go run github.com/golangci/golangci-lint/cmd/golangci-lint@v1.58.2 run --timeout 60m ./...
+
 .PHONY: license-check
 license-check:
 	go mod vendor

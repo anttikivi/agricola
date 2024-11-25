@@ -30,6 +30,57 @@ permissions:
   contents: read
 
 jobs:
+  consistency-checks:
+    name: Code Consistency Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fetch source code
+        uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0 # We need to do comparisons against the main branch.
+
+      - name: Determine Go version
+        id: go
+        uses: ./.github/actions/go-version
+
+      - name: Install Go toolchain
+        uses: actions/setup-go@v5.1.0
+        with:
+          go-version: ${{ steps.go.outputs.version }}
+
+      # NOTE: This cache is shared so the following step must always be
+      # identical across the unit-tests, e2e-tests, and consistency-checks
+      # jobs, or else weird things could happen.
+      - name: Cache Go modules
+        uses: actions/cache@v4.1.2
+        with:
+          path: ~/go/pkg
+          key: go-mod-${{ hashFiles('go.sum') }}
+          restore-keys: |
+            go-mod-
+
+      - name: go.mod and go.sum consistency check
+        run: |
+          go mod tidy
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo >&2 "ERROR: go.mod/go.sum are not up-to-date. Run 'go mod tidy' and then commit the updated files."
+            exit 1
+          fi
+
+      - name: Code linting
+        uses: golangci/golangci-lint-action@v6.1.1
+        with:
+          version: v1.62
+
+      # - name: Copyright headers
+      #   run: |
+      #     go run github.com/hashicorp/copywrite headers --plan
+      #     if [[ $? != 0 ]]; then
+      #       echo >&2 "ERROR: some files are missing required copyright headers. Run `scripts/add-copyright-headers.sh` locally and then commit the updated files."
+      #       exit 1
+      #     fi
+
   license-checks:
     name: License checks
     runs-on: ubuntu-latest
@@ -45,7 +96,7 @@ jobs:
       - name: Restore cache license information of dependencies
         uses: actions/cache/restore@v4.1.2
         with:
-          path: ".licensei.cache"
+          path: .licensei.cache
           key: licensei-cache-${{ hashFiles('go.sum') }}
           restore-keys: |
             licensei-cache-
@@ -70,5 +121,5 @@ jobs:
         uses: actions/cache/save@v4.1.2
         if: always()
         with:
-          path: ".licensei.cache"
+          path: .licensei.cache
           key: licensei-cache-${{ hashFiles('go.sum') }}
