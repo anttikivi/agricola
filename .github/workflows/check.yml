@@ -31,7 +31,7 @@ permissions:
 
 jobs:
   consistency-checks:
-    name: Code Consistency Checks
+    name: Code consistency checks
     runs-on: ubuntu-latest
 
     steps:
