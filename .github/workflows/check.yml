@@ -1,0 +1,56 @@
+name: Checks
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+*"
+
+permissions:
+  contents: read
+
+jobs:
+  license-checks:
+    name: License checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fetch source code
+        uses: actions/checkout@v4.2.2
+
+      - name: Install licensei
+        run: |
+          make deps
+
+      - name: Restore cache license information of dependencies
+        uses: actions/cache/restore@v4.1.2
+        with:
+          path: ".licensei.cache"
+          key: licensei-cache-${{ hashFiles('go.sum') }}
+          restore-keys: |
+            licensei-cache-
+
+      - name: Determine Go version
+        id: go
+        uses: ./.github/actions/go-version
+
+      - name: Install Go toolchain
+        uses: actions/setup-go@v5.1.0
+        with:
+          go-version: ${{ steps.go.outputs.version }}
+
+      - name: Run licensei
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          make license-check
+        if: env.LICENSE_CHECK != 'false'
+
+      - name: Save cache license information of dependencies
+        uses: actions/cache/save@v4.1.2
+        if: always()
+        with:
+          path: ".licensei.cache"
+          key: licensei-cache-${{ hashFiles('go.sum') }}
