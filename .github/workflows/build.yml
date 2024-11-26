@@ -71,6 +71,7 @@ jobs:
 
       - name: Build Agricola
         env:
+          AGRICOLA_VERSION: ${{ needs.get-version.outputs.version }}
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
         run: make build

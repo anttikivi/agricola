@@ -1,6 +1,11 @@
 package cmd
 
-import "github.com/anttikivi/agricola/internal/logging"
+import (
+	"log"
+
+	"github.com/anttikivi/agricola/internal/logging"
+	"github.com/anttikivi/agricola/version"
+)
 
 const (
 	Name        = "Agricola"
@@ -12,6 +17,8 @@ func Execute() int {
 	defer handlePanic()
 
 	logging.Init()
+
+	log.Printf("[INFO] %s version: %s", Name, version.Version())
 
 	return 0
 }
