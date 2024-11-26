@@ -1,6 +1,13 @@
 GOLANGCI_LINT_VERSION = 1.62.2
 LICENSEI_VERSION = 0.9.0
 
+.PHONY: all
+all: build
+
+.PHONY: build
+build:
+	go build -o ager ./main.go
+
 .PHONY: check
 check: golangci-lint license-check
 
