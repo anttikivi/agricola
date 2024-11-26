@@ -1,4 +1,12 @@
+GOLANGCI_LINT_VERSION = 1.62.2
 LICENSEI_VERSION = 0.9.0
+
+.PHONY: check
+check: golangci-lint license-check
+
+.PHONY: golangci-lint
+golangci-lint:
+	go run github.com/golangci/golangci-lint/cmd/golangci-lint@v${GOLANGCI_LINT_VERSION} run ./...
 
 .PHONY: license-check
 license-check:

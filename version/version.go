@@ -15,11 +15,12 @@ var rawVersion string
 var version *semver.Version
 
 func Create() {
-	trimmed := strings.TrimSpace(rawVersion)
-	v, err := semver.NewVersion(trimmed)
+	v, err := semver.NewVersion(strings.TrimSpace(rawVersion))
 	if err != nil {
-		panic(fmt.Sprintf("Error parsing the semantic version string \"%s\": %v", trimmed, err.Error()))
+		// TODO: Add a better way of handling error in parsing the version.
+		panic(fmt.Sprintf("Error parsing the semantic version string \"%s\": %v", strings.TrimSpace(rawVersion), err.Error()))
 	}
+
 	version = v
 }
 
@@ -27,5 +28,6 @@ func Version() *semver.Version {
 	if version == nil {
 		Create()
 	}
+
 	return version
 }
