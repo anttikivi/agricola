@@ -1,0 +1,58 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build Agricola for ${{ matrix.goos }}/${{ matrix.goarch }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - { goos: "freebsd", goarch: "386", os: "ubuntu-latest" }
+          - { goos: "freebsd", goarch: "amd64", os: "ubuntu-latest" }
+          - { goos: "freebsd", goarch: "arm", os: "ubuntu-latest" }
+          - { goos: "linux", goarch: "386", os: "ubuntu-latest" }
+          - { goos: "linux", goarch: "amd64", os: "ubuntu-latest" }
+          - { goos: "linux", goarch: "arm", os: "ubuntu-latest" }
+          - { goos: "linux", goarch: "arm64", os: "ubuntu-latest" }
+          - { goos: "openbsd", goarch: "386", os: "ubuntu-latest" }
+          - { goos: "openbsd", goarch: "amd64", os: "ubuntu-latest" }
+          - { goos: "solaris", goarch: "amd64", os: "ubuntu-latest" }
+          - { goos: "windows", goarch: "386", os: "ubuntu-latest" }
+          - { goos: "windows", goarch: "amd64", os: "ubuntu-latest" }
+          - { goos: "darwin", goarch: "amd64", os: "macos-latest" }
+          - { goos: "darwin", goarch: "arm64", os: "macos-latest" }
+      fail-fast: false
+
+    steps:
+      - name: Fetch the source code
+        uses: actions/checkout@v4.2.2
+
+      - name: Determine the Go version
+        id: go
+        uses: opentofu/opentofu/.github/actions/go-version@v1.8.6
+
+      # TODO: Include the version in the artifact name.
+      - name: Determine the artifact basename
+        run: echo "ARTIFACT_BASENAME=ager_${{ matrix.goos }}_${{ matrix.goarch }}.zip" >> $GITHUB_ENV
+
+      - name: Build Agricola
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+        run: make build
+
+      - name: Upload the build artifact
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          name: ${{ env.ARTIFACT_BASENAME }}
+          path: ager
+          if-no-files-found: error
