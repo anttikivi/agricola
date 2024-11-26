@@ -9,7 +9,10 @@ build:
 	go build -o ager ./main.go
 
 .PHONY: check
-check: golangci-lint license-check
+check: lint license-check
+
+.PHONY: lint
+lint: golangci-lint
 
 .PHONY: golangci-lint
 golangci-lint:
