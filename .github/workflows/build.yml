@@ -10,9 +10,24 @@ permissions:
   contents: read
 
 jobs:
+  get-version:
+    name: Get Agricola version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get-version.outputs.version }}
+
+    steps:
+      - name: Get the Agricola version
+        shell: bash
+        run: |
+          version="$(<version/VERSION)"
+          version="$(echo "${version}" | sed 's/ //g')"
+          echo "version=${version}+$(echo "${{ github.sha }}" | cut -c -7)" >> "${GITHUB_OUTPUT}"
+
   build:
     name: Build Agricola for ${{ matrix.goos }}/${{ matrix.goarch }}
     runs-on: ${{ matrix.os }}
+    needs: get-version
     strategy:
       matrix:
         include:
@@ -47,7 +62,7 @@ jobs:
 
       # TODO: Include the version in the artifact name.
       - name: Determine the artifact basename
-        run: echo "ARTIFACT_BASENAME=ager_${{ matrix.goos }}_${{ matrix.goarch }}.zip" >> $GITHUB_ENV
+        run: echo "ARTIFACT_BASENAME=ager_${{ needs.get-version.outputs.version }}_${{ matrix.goos }}_${{ matrix.goarch }}.zip" >> $GITHUB_ENV
 
       - name: Build Agricola
         env:
