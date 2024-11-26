@@ -26,7 +26,7 @@ jobs:
         run: |
           version="$(<version/VERSION)"
           version="$(echo "${version}" | sed 's/ //g')"
-          echo "version=${version}+$(echo "${{ github.sha }}" | cut -c -7)" >> "${GITHUB_OUTPUT}"
+          echo "version=${version}.${{ github.run_number }}+sha.$(echo "${{ github.sha }}" | cut -c -7)" >> "${GITHUB_OUTPUT}"
 
   build:
     name: Build Agricola for ${{ matrix.goos }}/${{ matrix.goarch }}
