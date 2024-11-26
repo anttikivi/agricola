@@ -40,6 +40,11 @@ jobs:
         id: go
         uses: opentofu/opentofu/.github/actions/go-version@v1.8.6
 
+      - name: Install the Go toolchain
+        uses: actions/setup-go@v5.1.0
+        with:
+          go-version: ${{ steps.go.outputs.version }}
+
       # TODO: Include the version in the artifact name.
       - name: Determine the artifact basename
         run: echo "ARTIFACT_BASENAME=ager_${{ matrix.goos }}_${{ matrix.goarch }}.zip" >> $GITHUB_ENV
