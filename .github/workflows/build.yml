@@ -1,3 +1,4 @@
+# This workflow is (at least for now) used for the development builds by the CI.
 name: Build
 
 on:
