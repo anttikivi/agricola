@@ -10,6 +10,7 @@ linters-settings:
         list-mode: strict
         allow:
           - $gostd
+          - github.com/anttikivi
           - github.com/Masterminds/semver/v3
   varnamelen:
     max-distance: 20
