@@ -65,8 +65,8 @@ jobs:
           go-version: ${{ steps.go.outputs.version }}
 
       # TODO: Include the version in the artifact name.
-      - name: Determine the artifact basename
-        run: echo "ARTIFACT_BASENAME=ager_${{ needs.get-version.outputs.version }}_${{ matrix.goos }}_${{ matrix.goarch }}.zip" >> $GITHUB_ENV
+      - name: Determine the artifact name
+        run: echo "ARTIFACT_NAME=ager-${{ needs.get-version.outputs.version }}-${{ matrix.goos }}-${{ matrix.goarch }}" >> $GITHUB_ENV
 
       - name: Build Agricola
         env:
@@ -77,6 +77,6 @@ jobs:
       - name: Upload the build artifact
         uses: actions/upload-artifact@v4.4.3
         with:
-          name: ${{ env.ARTIFACT_BASENAME }}
+          name: ${{ env.ARTIFACT_NAME }}
           path: ager
           if-no-files-found: error
