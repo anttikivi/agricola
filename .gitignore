@@ -8,6 +8,8 @@
 
 /ager
 
+*.log
+
 .licensei.cache
 
 go.work
