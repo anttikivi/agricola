@@ -17,6 +17,9 @@ jobs:
       version: ${{ steps.get-version.outputs.version }}
 
     steps:
+      - name: Fetch the source code
+        uses: actions/checkout@v4.2.2
+
       - name: Get the Agricola version
         shell: bash
         run: |
