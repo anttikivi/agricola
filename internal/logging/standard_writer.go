@@ -24,9 +24,13 @@ func (w *standardWriter) Write(p []byte) (int, error) {
 		w.logger.warn(s)
 	case LevelError:
 		w.logger.error(s)
+	case LevelOff:
+	case LevelDefault:
+		fallthrough
 	default:
 		w.logger.info(s)
 	}
+
 	return len(p), nil
 }
 

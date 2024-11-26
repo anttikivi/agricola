@@ -26,9 +26,10 @@ const (
 const (
 	// defaultLevel is the default logging level to use.
 	// TODO: This will be switched to LevelOff when in production.
-	defaultLevel       Level = LevelTrace
-	defaultLevelString       = "TRACE"
-	defaultTimeFormat        = "2006-01-02T15:04:05.000Z0700"
+	defaultLevel       Level       = LevelTrace
+	defaultLevelString             = "TRACE"
+	defaultLogPerm     os.FileMode = 0o666
+	defaultTimeFormat              = "2006-01-02T15:04:05.000Z0700"
 )
 
 const (
@@ -64,7 +65,7 @@ func Init() {
 	logOutput := io.Writer(os.Stderr)
 
 	if logPath := os.Getenv(envVariableLogPath); logPath != "" {
-		f, err := os.OpenFile(logPath, syscall.O_CREAT|syscall.O_RDWR|syscall.O_APPEND, 0666)
+		f, err := os.OpenFile(logPath, syscall.O_CREAT|syscall.O_RDWR|syscall.O_APPEND, defaultLogPerm)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error opening the log file: %v\n", err)
 		} else {
