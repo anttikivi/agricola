@@ -42,6 +42,26 @@ func Execute() int {
 		}
 	}
 
+	noColor := false
+	i := 0
+
+	// Allow using '-no-color' or '--no-color' to disable coloring the output.
+	for _, arg := range args {
+		if arg == "-no-color" || arg == "--no-color" {
+			noColor = true
+		} else {
+			args[i] = arg
+			i++
+		}
+	}
+
+	// Remove the duplicated last argument.
+	args = args[:i]
+
+	if noColor {
+		log.Print("[INFO] Output coloring disabled")
+	}
+
 	log.Printf("[INFO] Arguments for the command: %#v", args)
 
 	commands := command.GetCommands()
