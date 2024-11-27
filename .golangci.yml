@@ -14,6 +14,10 @@ linters-settings:
           - $gostd
           - github.com/anttikivi
           - github.com/Masterminds/semver/v3
+  funlen:
+    lines: 60
+    statements: 40
+    ignore-comments: true
   varnamelen:
     max-distance: 30
     min-name-length: 3
