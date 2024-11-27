@@ -9,6 +9,7 @@ import (
 	"github.com/anttikivi/agricola/internal/command"
 	"github.com/anttikivi/agricola/internal/crash"
 	"github.com/anttikivi/agricola/internal/logging"
+	"github.com/anttikivi/agricola/internal/ui"
 	"github.com/anttikivi/agricola/version"
 )
 
@@ -19,6 +20,9 @@ func Execute() int {
 	defer crash.HandlePanic()
 
 	logging.Init()
+
+	ui := &ui.BasicUserInterface{}
+	rootCmd := command.CreateRootCommand(ui)
 
 	log.Printf("[INFO] %s version: %s", command.Name, version.Version())
 	log.Printf("[INFO] Go runtime version: %s", runtime.Version())
@@ -64,7 +68,7 @@ func Execute() int {
 
 	log.Printf("[INFO] Arguments for the command: %#v", args)
 
-	commands := command.GetCommands()
+	commands := command.GetCommands(rootCmd)
 
 	log.Printf("[DEBUG] Using %q as the subcommand", args[0])
 

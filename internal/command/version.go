@@ -11,22 +11,24 @@ import (
 )
 
 // A Version is the version subcommand.
-type Version struct{}
+type Version struct {
+	root *Root
+}
 
 func (v *Version) Execute(args []string) int {
 	f := flag.NewFlagSet("version", flag.ContinueOnError)
 	f.SetOutput(io.Discard)
 	f.Bool("v", true, "version")
 	f.Bool("version", true, "version")
-	f.Usage = func() { fmt.Println(v.Usage()) }
+	f.Usage = func() { v.root.ui.Error(v.Usage()) }
 
 	if err := f.Parse(args); err != nil {
-		fmt.Printf("Error parsing command-line flags: %s\n", err.Error())
+		v.root.ui.Error(fmt.Sprintf("Error parsing command-line flags: %s\n", err.Error()))
 
 		return 1
 	}
 
-	fmt.Println(Name + " " + version.Version().String() + " " + runtime.GOOS + "/" + runtime.GOARCH)
+	v.root.ui.Output(Name + " " + version.Version().String() + " " + runtime.GOOS + "/" + runtime.GOARCH)
 
 	return 0
 }
