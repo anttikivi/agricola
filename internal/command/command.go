@@ -10,8 +10,12 @@ type Command interface {
 	// Execute executes the command with the given arguments and returns the exit code.
 	Execute(args []string) int
 
-	// Summary return a short help string for the command used in the command line help.
+	// Summary returns a short help string for the command used in the command line help.
 	Summary() string
+
+	// Usage returns the usage of the command.
+	// It is printed when the subcommand is called incorrectly or with the help flag.
+	Usage() string
 }
 
 // GetCommands returns a map the contains the implementations of Command.
