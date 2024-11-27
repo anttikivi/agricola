@@ -13,3 +13,11 @@ type Command interface {
 	// Summary return a short help string for the command used in the command line help.
 	Summary() string
 }
+
+// GetCommands returns a map the contains the implementations of Command.
+// The keys are strings that act as the subcommand.
+func GetCommands() map[string]Command {
+	return map[string]Command{
+		"version": &Version{},
+	}
+}
