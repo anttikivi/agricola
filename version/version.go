@@ -8,14 +8,14 @@ import (
 	"github.com/Masterminds/semver/v3"
 )
 
-// rawVersion is the raw version value read from the VERSION file.
-// It is used if buildVersion is not set.
+// rawVersion is the raw version value read from the VERSION file. It is used
+// if buildVersion is not set.
 //
 //go:embed VERSION
 var rawVersion string
 
-// buildVersion is the version set using linker flags build time.
-// It is used to over the value embedded from the VERSION file if set.
+// buildVersion is the version set using linker flags build time. It is used to
+// over the value embedded from the VERSION file if set.
 var buildVersion string //nolint:gochecknoglobals
 
 // version is the parsed semantic version of Agricola.

@@ -6,9 +6,9 @@ import (
 	"io"
 )
 
-// bufferWriter is the writer used by the logger to write the messages.
-// After writing a message, the logger flushes the bufferWriter.
-// flush writes the buffer in the bufferWriter to its writer that outputs the message.
+// bufferWriter is the writer used by the logger to write the messages. After
+// writing a message, the logger flushes the bufferWriter. flush writes
+// the buffer in the bufferWriter to its writer that outputs the message.
 type bufferWriter struct {
 	buffer bytes.Buffer
 	writer io.Writer
@@ -43,7 +43,8 @@ func (w *bufferWriter) writeByte(c byte) error {
 }
 
 func (w *bufferWriter) writeString(s string) error {
-	// TODO: There was another return value, n, but it was removed as it was not used.
+	// TODO: There was another return value, n, but it was removed as it was not
+	// used.
 	_, err := w.buffer.WriteString(s)
 	if err != nil {
 		return fmt.Errorf("failed to write a string to the buffer writer's byte buffer: %w", err)

@@ -13,7 +13,8 @@ import (
 type Level int
 
 const (
-	// LevelDefault indicates that no logging level is set and the default is used.
+	// LevelDefault indicates that no logging level is set and the default is
+	// used.
 	LevelDefault Level = iota
 	LevelTrace
 	LevelDebug
@@ -33,15 +34,18 @@ const (
 )
 
 const (
-	// envVariableLog is the name of the environment variable that sets the logging level.
+	// envVariableLog is the name of the environment variable that sets
+	// the logging level.
 	envVariableLog = "AGER_LOG"
 
-	// envVariableLogPath is the name of the environment variable that sets the output file for the logs.
+	// envVariableLogPath is the name of the environment variable that sets
+	// the output file for the logs.
 	envVariableLogPath = "AGER_LOG_PATH"
 )
 
-// Init initializes the Go log package for use with the program.
-// The functions in the log package are used for actual logging and not the output printed to the user.
+// Init initializes the Go log package for use with the program. The functions
+// in the log package are used for actual logging and not the output printed to
+// the user.
 func Init() {
 	logLevel := LevelTrace
 	envLogLevel := strings.ToUpper(strings.TrimSpace(os.Getenv(envVariableLog)))

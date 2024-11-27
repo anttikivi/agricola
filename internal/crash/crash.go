@@ -9,11 +9,12 @@ import (
 	"github.com/anttikivi/agricola/internal/command"
 )
 
-// segfault is the exit code for when the panic handler returns.
-// It is fine as an exit code for when the program panics.
+// segfault is the exit code for when the panic handler returns. It is fine as
+// an exit code for when the program panics.
 const segfault = 11
 
-// panicLock is used to ensure that the only the first call to handlePanic prints if multiple goroutines panic.
+// panicLock is used to ensure that the only the first call to handlePanic
+// prints if multiple goroutines panic.
 var panicLock sync.Mutex //nolint:gochecknoglobals
 
 // handlePanic is called to recover from an internal panic.
