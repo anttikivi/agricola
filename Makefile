@@ -1,3 +1,4 @@
+GOFUMPT_VERSION = 0.7.0
 GOLANGCI_LINT_VERSION = 1.62.2
 LICENSEI_VERSION = 0.9.0
 
@@ -11,6 +12,10 @@ ifneq ($(AGRICOLA_VERSION),)
 else
 	go build -o ager ./main.go
 endif
+
+.PHONY: fmt
+fmt:
+	go run mvdan.cc/gofumpt@v${GOFUMPT_VERSION} -l -w .
 
 .PHONY: test
 test:
