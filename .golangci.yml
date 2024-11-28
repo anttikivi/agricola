@@ -15,8 +15,8 @@ linters-settings:
           - github.com/anttikivi
           - github.com/Masterminds/semver/v3
   funlen:
-    lines: 60
-    statements: 40
+    lines: 100
+    statements: 50
     ignore-comments: true
   varnamelen:
     max-distance: 30
