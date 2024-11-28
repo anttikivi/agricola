@@ -32,7 +32,7 @@ func (v *VersionCommand) Execute(args []string) int {
 }
 
 func (v *VersionCommand) Summary() string {
-	return ""
+	return "prints " + Name + " version"
 }
 
 func (v *VersionCommand) Usage() string {

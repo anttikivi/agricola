@@ -15,6 +15,10 @@ type RootCommand struct {
 	version version.Version
 }
 
-func CreateRootCommand(ui ui.UserInterface, version version.Version) RootCommand {
-	return RootCommand{ui: ui, version: version}
+// CreateRootCommand returns a RootCommand.
+func CreateRootCommand(ui ui.UserInterface, v version.Version) RootCommand {
+	return RootCommand{
+		ui:      ui,
+		version: v,
+	}
 }

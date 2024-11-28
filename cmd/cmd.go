@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"runtime"
@@ -21,7 +20,7 @@ func Execute() int {
 
 	logging.Init()
 
-	ui := ui.CreateBasicUI(os.Stdout, os.Stderr)
+	ui := ui.CreateBasicUI(os.Stdout, os.Stderr) //nolint:varnamelen
 	rootCmd := command.CreateRootCommand(ui, version.GetVersion())
 
 	log.Printf("[TRACE] Raw version information: %s", version.GetRawVersion())
@@ -69,15 +68,20 @@ func Execute() int {
 
 	log.Printf("[INFO] Arguments for the command: %#v", args)
 
-	commands := command.GetCommands(rootCmd)
+	subcommands := command.Commands(rootCmd)
 
-	log.Printf("[DEBUG] Using %q as the subcommand", args[0])
+	cmdStr := ""
+	if len(args) > 0 {
+		cmdStr = args[0]
+	}
 
-	cmd, ok := commands[args[0]]
+	log.Printf("[DEBUG] Using %q as the subcommand", cmdStr)
+
+	cmd, ok := subcommands[cmdStr]
 	if !ok {
-		log.Printf("[WARN] The subcommand %q was not found", args[0])
+		log.Printf("[INFO] The subcommand %q was not found", cmdStr)
 		// TODO: Print help.
-		fmt.Printf("%s has no subcommand named %q.\n", command.Name, args[0]) //nolint:forbidigo
+		ui.Output(command.Usage(subcommands))
 
 		return commandNotFound
 	}
