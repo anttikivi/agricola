@@ -29,3 +29,7 @@ func (ui *BasicUserInterface) Output(msg string) {
 	fmt.Fprint(ui.out, msg)
 	fmt.Fprint(ui.out, "\n")
 }
+
+func CreateBasicUI(out io.Writer, err io.Writer) *BasicUserInterface {
+	return &BasicUserInterface{out: out, err: err}
+}

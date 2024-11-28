@@ -22,8 +22,8 @@ type Command interface {
 
 // GetCommands returns a map the contains the implementations of Command.
 // The keys are strings that act as the subcommand.
-func GetCommands(rootCmd *Root) map[string]Command {
+func GetCommands(rootCmd RootCommand) map[string]Command {
 	return map[string]Command{
-		"version": &Version{root: rootCmd},
+		"version": &VersionCommand{RootCommand: rootCmd},
 	}
 }

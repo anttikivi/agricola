@@ -21,10 +21,11 @@ func Execute() int {
 
 	logging.Init()
 
-	ui := &ui.BasicUserInterface{}
-	rootCmd := command.CreateRootCommand(ui)
+	ui := ui.CreateBasicUI(os.Stdout, os.Stderr)
+	rootCmd := command.CreateRootCommand(ui, version.GetVersion())
 
-	log.Printf("[INFO] %s version: %s", command.Name, version.Version())
+	log.Printf("[TRACE] Raw version information: %s", version.GetRawVersion())
+	log.Printf("[INFO] %s version: %v", command.Name, version.GetVersion())
 	log.Printf("[INFO] Go runtime version: %s", runtime.Version())
 	log.Printf("[INFO] CLI args: %#v", os.Args)
 
