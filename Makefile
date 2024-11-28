@@ -12,6 +12,10 @@ else
 	go build -o ager ./main.go
 endif
 
+.PHONY: test
+test:
+	go test -v ./...
+
 .PHONY: check
 check: lint license-check
 
