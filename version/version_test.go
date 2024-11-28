@@ -12,6 +12,9 @@ var tests = []struct { //nolint:gochecknoglobals
 }{
 	{"", ""},
 
+	{"0.1.0-alpha.24+sha.19031c2.darwin.amd64", "0.1.0-alpha.24"},
+	{"0.1.0-alpha.24+sha.19031c2-darwin-amd64", "0.1.0-alpha.24"},
+
 	{"bad", ""},
 	{"1-alpha.beta.gamma", ""},
 	{"1-pre", ""},
@@ -152,6 +155,22 @@ func TestIsValid(t *testing.T) {
 		ok := version.IsValid(tt.in)
 		if ok != (tt.out != "") {
 			t.Errorf("IsValid(%q) = %v, want %v", tt.in, ok, !ok)
+		}
+	}
+}
+
+func TestVersionString(t *testing.T) {
+	t.Parallel()
+
+	for _, tt := range tests {
+		// Don't test the cases where the versions don't parse.
+		if tt.out != "" {
+			v, _ := version.Parse(tt.in)
+
+			ok := v.String() == tt.out
+			if !ok {
+				t.Errorf("Version{%q}.String() = %v, want %v", tt.in, v, tt.out)
+			}
 		}
 	}
 }

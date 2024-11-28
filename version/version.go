@@ -71,14 +71,6 @@ func (v Version) String() string {
 		sb.WriteString(v.prerelease.String())
 	}
 
-	if len(v.build) > 0 {
-		sb.WriteString("+")
-
-		for _, s := range v.build {
-			sb.WriteString(s)
-		}
-	}
-
 	return sb.String()
 }
 
@@ -95,7 +87,7 @@ func GetRawVersion() string {
 
 func GetVersion() Version {
 	if !parsed {
-		v, err := parse(GetRawVersion())
+		v, err := Parse(GetRawVersion())
 		if err != nil {
 			panic(fmt.Sprintf("failed to parse the version: %v", err))
 		}
@@ -108,7 +100,7 @@ func GetVersion() Version {
 
 // IsValid reports whether s is a valid semantic version string.
 func IsValid(s string) bool {
-	if _, err := parse(s); err != nil {
+	if _, err := Parse(s); err != nil {
 		return false
 	}
 
@@ -130,15 +122,7 @@ func countDigits(i int) int {
 	return count
 }
 
-func isAlphanumericIdentifier(c rune) bool {
-	return ('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z') || unicode.IsDigit(c) || c == '-'
-}
-
-func isPrereleaseSeparator(c rune) bool {
-	return c == '.' || c == '+'
-}
-
-func parse(ver string) (Version, error) {
+func Parse(ver string) (Version, error) {
 	if ver == "" {
 		return Version{}, fmt.Errorf("empty string: %w", errInvalidVersion)
 	}
@@ -224,6 +208,14 @@ func parse(ver string) (Version, error) {
 	}, nil
 }
 
+func isAlphanumericIdentifier(c rune) bool {
+	return ('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z') || unicode.IsDigit(c) || c == '-'
+}
+
+func isPrereleaseSeparator(c rune) bool {
+	return c == '.' || c == '+'
+}
+
 func parseBuild(s string) ([]string, error) {
 	if s == "" {
 		return nil, fmt.Errorf("cannot parse empty string as a build: %w", errInvalidVersion)
@@ -305,7 +297,12 @@ func parsePrereleaseIdentifiers(s string) ([]prereleaseIdentifier, error) {
 
 	var builder strings.Builder
 
-	result := make([]prereleaseIdentifier, strings.Count(s, ".")+1)
+	resultLen := strings.Count(s, ".") + 1
+	if i := strings.IndexRune(s, '+'); i != -1 {
+		resultLen -= strings.Count(s[i:], ".")
+	}
+
+	result := make([]prereleaseIdentifier, resultLen)
 
 	i := 0
 

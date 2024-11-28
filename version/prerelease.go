@@ -27,12 +27,16 @@ func (p Prerelease) String() string {
 				// TODO: Try not to panic, but we should never get here.
 				panic(fmt.Sprintf("invalid pre-release identifier options: %d and %s", i, s))
 			}
+
+			sb.WriteRune('.')
 		}
 	} else {
 		return ""
 	}
 
-	return sb.String()
+	s := sb.String()
+
+	return s[:len(s)-1]
 }
 
 // A prereleaseIdentifier is a single pre-release identifier separated by dots.
