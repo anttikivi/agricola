@@ -9,7 +9,7 @@ all: build
 .PHONY: build
 build:
 ifneq ($(AGRICOLA_VERSION),)
-	go build -ldflags "-X 'github.com/anttikivi/agricola/version.buildVersion=$(AGRICOLA_VERSION)'" -o ager ./main.go
+	go build -ldflags "-X 'main.buildVersion=$(AGRICOLA_VERSION)'" -o ager ./main.go
 else
 	go build -o ager ./main.go
 endif

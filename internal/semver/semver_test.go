@@ -1,9 +1,9 @@
-package version_test
+package semver_test
 
 import (
 	"testing"
 
-	"github.com/anttikivi/agricola/version"
+	"github.com/anttikivi/agricola/internal/semver"
 )
 
 var tests = []struct { //nolint:gochecknoglobals
@@ -152,7 +152,7 @@ func TestIsValid(t *testing.T) {
 	t.Parallel()
 
 	for _, tt := range tests {
-		ok := version.IsValid(tt.in)
+		ok := semver.IsValid(tt.in)
 		if ok != (tt.out != "") {
 			t.Errorf("IsValid(%q) = %v, want %v", tt.in, ok, !ok)
 		}
@@ -165,7 +165,7 @@ func TestVersionString(t *testing.T) {
 	for _, tt := range tests {
 		// Don't test the cases where the versions don't parse.
 		if tt.out != "" {
-			v, _ := version.Parse(tt.in)
+			v, _ := semver.Parse(tt.in)
 
 			ok := v.String() == tt.out
 			if !ok {

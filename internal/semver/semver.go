@@ -1,7 +1,6 @@
-package version
+package semver
 
 import (
-	_ "embed"
 	"errors"
 	"fmt"
 	"strconv"
@@ -11,91 +10,38 @@ import (
 
 // errInvalidVersion is the error returned by the version parsing functions when
 // they encounter invalid version string.
-var errInvalidVersion = errors.New("invalid semantic version")
-
-// rawVersion is the raw version value read from the VERSION file. It is used
-// if buildVersion is not set.
 //
-//go:embed VERSION
-var rawVersion string
-
-// buildVersion is the version set using linker flags build time. It is used to
-// over the value embedded from the VERSION file if set.
-var buildVersion string //nolint:gochecknoglobals
-
-// version is the global instance of the Agricole version.
-var version Version
-
-var parsed = false //nolint:gochecknoglobals
+// TODO: Maybe implement different errors for the different cases.
+var errInvalidVersion = errors.New("invalid semantic version")
 
 type buildIdentifiers []string
 
 // A Version is a parsed instance of a version number that adheres to the
 // semantic versioning 2.0.0.
 type Version struct {
-	major      int
-	minor      int
-	patch      int
-	prerelease Prerelease
-	build      buildIdentifiers
+	Major      int
+	Minor      int
+	Patch      int
+	Prerelease Prerelease
+	Build      buildIdentifiers
 	rawStr     string
-}
-
-func (v Version) Major() int {
-	return v.major
-}
-
-func (v Version) Minor() int {
-	return v.minor
-}
-
-func (v Version) Patch() int {
-	return v.patch
-}
-
-func (v Version) RawStr() string {
-	return v.rawStr
 }
 
 func (v Version) String() string {
 	var sb strings.Builder
 
-	sb.WriteString(strconv.Itoa(v.major))
+	sb.WriteString(strconv.Itoa(v.Major))
 	sb.WriteString(".")
-	sb.WriteString(strconv.Itoa(v.minor))
+	sb.WriteString(strconv.Itoa(v.Minor))
 	sb.WriteString(".")
-	sb.WriteString(strconv.Itoa(v.patch))
+	sb.WriteString(strconv.Itoa(v.Patch))
 
-	if len(v.prerelease.identifiers) > 0 {
+	if len(v.Prerelease.identifiers) > 0 {
 		sb.WriteString("-")
-		sb.WriteString(v.prerelease.String())
+		sb.WriteString(v.Prerelease.String())
 	}
 
 	return sb.String()
-}
-
-func GetRawVersion() string {
-	v := buildVersion
-	if v == "" {
-		v = rawVersion
-	}
-
-	v = strings.TrimSpace(v)
-
-	return v
-}
-
-func GetVersion() Version {
-	if !parsed {
-		v, err := Parse(GetRawVersion())
-		if err != nil {
-			panic(fmt.Sprintf("failed to parse the version: %v", err))
-		}
-
-		version = v
-	}
-
-	return version
 }
 
 // IsValid reports whether s is a valid semantic version string.
@@ -199,11 +145,11 @@ func Parse(ver string) (Version, error) {
 	}
 
 	return Version{
-		major:      major,
-		minor:      minor,
-		patch:      patch,
-		prerelease: Prerelease{identifiers: prereleaseIdentifiers},
-		build:      build,
+		Major:      major,
+		Minor:      minor,
+		Patch:      patch,
+		Prerelease: Prerelease{identifiers: prereleaseIdentifiers},
+		Build:      build,
 		rawStr:     ver,
 	}, nil
 }
