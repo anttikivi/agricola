@@ -5,6 +5,7 @@ linters:
 
 linters-settings:
   cyclop:
+    # max-complexity: 10
     max-complexity: 20
   depguard:
     rules:
