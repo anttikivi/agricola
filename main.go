@@ -45,6 +45,7 @@ func run() int {
 	// log can be written relative to it.
 
 	logging.Init()
+	ui.Init()
 
 	ver := parseVersion()
 
@@ -53,15 +54,12 @@ func run() int {
 	log.Printf("[INFO] Go runtime version: %s", runtime.Version())
 	log.Printf("[INFO] CLI args: %#v", os.Args)
 
-	defaultUI := ui.BasicUI(os.Stdout, os.Stderr)
-
 	ager := command.BaseCommand()
-	ager.UI = defaultUI
 	ager.Commands = []*command.Command{
-		version.Command(defaultUI, ver),
+		version.Command(ver),
 	}
 
-	flag.Usage = func() { help.PrintUsage(defaultUI, ager) }
+	flag.Usage = func() { help.PrintUsage(ager) }
 	flag.Parse()
 
 	args := flag.Args()
@@ -69,27 +67,27 @@ func run() int {
 	log.Printf("[DEBUG] Arguments after parsing the global flags: %#v", args)
 
 	if len(args) < 1 {
-		help.PrintUsage(defaultUI, ager)
+		help.PrintUsage(ager)
 
 		return command.ExitInvalidArgs
 	}
 
 	// TODO: Should I also allow using "-h", "-help", and "--help" flags?
 	if args[0] == helpCmdName {
-		return help.Help(defaultUI, args[1:])
+		return help.Help(args[1:])
 	}
 
 	cmd, used := lookupCmd(ager, args)
 	if len(cmd.Commands) > 0 {
 		if used >= len(args) {
-			help.PrintUsage(defaultUI, cmd)
+			help.PrintUsage(cmd)
 
 			return command.ExitInvalidArgs
 		}
 
 		if args[used] == helpCmdName {
 			// Accept "ager plow help" and "ager plow help foo" for "ager help plow" and "ager help plow foo".
-			help.Help(defaultUI, append(slices.Clip(args[:used]), args[used+1:]...))
+			help.Help(append(slices.Clip(args[:used]), args[used+1:]...))
 
 			return command.ExitSuccess
 		}
@@ -104,8 +102,8 @@ func run() int {
 			cmdName = args[0]
 		}
 
-		defaultUI.Error(fmt.Sprintf("%s %s: unknown command", command.CommandName, cmdName))
-		defaultUI.Error(fmt.Sprintf("Run '%s help%s' for usage", command.CommandName, helpArg))
+		ui.Errorf("%s %s: unknown command\n", command.CommandName, cmdName)
+		ui.Errorf("Run '%s help%s' for usage\n", command.CommandName, helpArg)
 
 		return command.ExitInvalidArgs
 	}
@@ -117,7 +115,7 @@ func run() int {
 
 func invoke(cmd *command.Command, args []string) int {
 	if err := cmd.Flag.Parse(args[1:]); err != nil {
-		cmd.UI.Error(fmt.Sprintf("Error parsing command-line flags: %v", err))
+		ui.Errorf("Error parsing command-line flags: %v\n", err)
 
 		return command.ExitInvalidArgs
 	}

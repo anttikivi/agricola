@@ -5,11 +5,53 @@
 // to the command line by default.
 package ui
 
-// A UserInterface is used to interact with the user.
-type UserInterface interface {
-	// Error prints an error message to the defined standard error output.
-	Error(msg string)
+import (
+	"fmt"
+	"io"
+	"os"
+)
 
-	// Output prints a message to the defined standard output.
-	Output(msg string)
+// DefaultWriter is the writer that the ui package writes the messages to when
+// no specific writer is specified.
+// It is used in particular by the default writing function that takes no writer
+// as its input.
+// The DefaultWriter is specified as a global variable because alternative
+// implementations unnecessarily complicate the code.
+var DefaultWriter io.Writer //nolint:gochecknoglobals
+
+// DefaultErrorWriter is the writer that the ui package writes error messages to
+// when no specific writer is specified.
+// It is used in particular by the default error writing function that takes no
+// writer as its input.
+// The DefaultErrorWriter is specified as a global variable because alternative
+// implementations unnecessarily complicate the code.
+var DefaultErrorWriter io.Writer //nolint:gochecknoglobals
+
+// Init initializes the global variables in the ui package.
+// It should be called at the start of the program.
+func Init() {
+	DefaultWriter = os.Stdout
+	DefaultErrorWriter = os.Stderr
+}
+
+// Write prints an error message to the default error output.
+func Error(msg string) {
+	fmt.Fprint(DefaultErrorWriter, msg)
+}
+
+// Write prints a message to the default output.
+func Write(msg string) {
+	fmt.Fprint(DefaultWriter, msg)
+}
+
+// Errorf formats according to a format specifier and prints the formatted
+// message to the default error output.
+func Errorf(format string, v ...any) {
+	fmt.Fprintf(DefaultErrorWriter, format, v...)
+}
+
+// Printf formats according to a format specifier and prints the formatted
+// message to the default output.
+func Printf(format string, v ...any) {
+	fmt.Fprintf(DefaultErrorWriter, format, v...)
 }

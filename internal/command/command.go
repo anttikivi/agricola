@@ -45,9 +45,6 @@ type Command struct {
 	// The order here is the order in which they are printed when running the
 	// 'help' command.
 	Commands []*Command
-
-	// UI is the user interface that the command uses.
-	UI ui.UserInterface
 }
 
 // LongName returns the command's long name.
@@ -102,8 +99,8 @@ func (c *Command) Usage() {
 		panic("(*Command).Usage() should not be called for the base command")
 	}
 
-	c.UI.Error("usage: " + c.UsageLine)
-	c.UI.Error("Run '" + CommandName + " help " + c.LongName() + "' for details.")
+	ui.Error("usage: " + c.UsageLine + "\n")
+	ui.Error("Run '" + CommandName + " help " + c.LongName() + "' for details.\n")
 }
 
 func BaseCommand() *Command {
@@ -115,7 +112,6 @@ func BaseCommand() *Command {
 		Long:      Name + " is a tool for managing web application deployments declaratively.",
 		Flag:      nil, // initialized in the main package
 		Commands:  nil, // initialized in the main package
-		UI:        nil, // initialized in the main package
 	}
 }
 
