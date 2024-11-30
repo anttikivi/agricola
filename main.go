@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "embed"
 	"flag"
 	"fmt"
 	"log"
@@ -16,8 +17,6 @@ import (
 	"github.com/anttikivi/agricola/internal/logging"
 	"github.com/anttikivi/agricola/internal/semver"
 	"github.com/anttikivi/agricola/internal/ui"
-
-	_ "embed"
 )
 
 const helpCmdName = "help"
