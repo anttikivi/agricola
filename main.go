@@ -4,17 +4,16 @@ import (
 	_ "embed"
 	"flag"
 	"fmt"
-	"log"
 	"os"
 	"runtime"
 	"slices"
 	"strings"
 
+	"github.com/anttikivi/agricola/internal/alog"
 	"github.com/anttikivi/agricola/internal/command"
 	"github.com/anttikivi/agricola/internal/command/help"
 	"github.com/anttikivi/agricola/internal/command/version"
 	"github.com/anttikivi/agricola/internal/crash"
-	"github.com/anttikivi/agricola/internal/logging"
 	"github.com/anttikivi/agricola/internal/semver"
 	"github.com/anttikivi/agricola/internal/ui"
 )
@@ -44,15 +43,16 @@ func run() int {
 	// The working directory should be set before logging is initialized as the
 	// log can be written relative to it.
 
-	logging.Init()
+	// TODO: Implement a way to control the verbosity level.
+	alog.Init(2) //nolint:mnd
 	ui.Init()
 
 	ver := parseVersion()
 
-	log.Printf("[TRACE] Raw version information: %s", rawVersionString())
-	log.Printf("[INFO] %s version: %v", command.Name, ver)
-	log.Printf("[INFO] Go runtime version: %s", runtime.Version())
-	log.Printf("[INFO] CLI args: %#v", os.Args)
+	alog.V(1).Infof("Raw version information: %s", rawVersionString())
+	alog.Infof("%s version: %v", command.Name, ver)
+	alog.Infof("Go runtime version: %s", runtime.Version())
+	alog.Infof("CLI args: %#v", os.Args)
 
 	ager := command.BaseCommand()
 	ager.Commands = []*command.Command{
@@ -64,7 +64,7 @@ func run() int {
 
 	args := flag.Args()
 
-	log.Printf("[DEBUG] Arguments after parsing the global flags: %#v", args)
+	alog.Infof("Arguments after parsing the global flags: %#v", args)
 
 	if len(args) < 1 {
 		help.PrintUsage(ager)
@@ -121,7 +121,7 @@ func invoke(cmd *command.Command, args []string) int {
 	}
 
 	args = cmd.Flag.Args()
-	log.Printf("[INFO] Running %s command with arguments: %#v", cmd.Name(), args)
+	alog.Infof("Running %s command with arguments: %#v", cmd.Name(), args)
 
 	return cmd.Run(cmd, args)
 }

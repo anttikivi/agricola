@@ -1,8 +1,6 @@
 package help
 
 import (
-	"text/template"
-
 	"github.com/anttikivi/agricola/internal/command"
 	"github.com/anttikivi/agricola/internal/ui"
 )
@@ -19,7 +17,7 @@ func PrintUsage(_ *command.Command) {
 
 // outputTemplate writes the given template text with the data from command cmd
 // to the command's output.
-func outputTemplate(text string, _ *command.Command) {
-	t := template.New("top")
-	template.Must(t.Parse(text))
-}
+// func outputTemplate(text string, _ *command.Command) {
+// 	t := template.New("top")
+// 	template.Must(t.Parse(text))
+// }
