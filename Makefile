@@ -1,3 +1,4 @@
+GCI_VERSION = 0.13.5
 GOFUMPT_VERSION = 0.7.0
 GOLANGCI_LINT_VERSION = 1.62.2
 LICENSEI_VERSION = 0.9.0
@@ -15,6 +16,7 @@ endif
 
 .PHONY: fmt
 fmt:
+	go run github.com/daixiang0/gci@v${GCI_VERSION} print . --skip-generated -s standard -s default
 	go run mvdan.cc/gofumpt@v${GOFUMPT_VERSION} -l -w .
 
 .PHONY: test
