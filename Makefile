@@ -16,7 +16,7 @@ endif
 
 .PHONY: fmt
 fmt:
-	go run github.com/daixiang0/gci@v${GCI_VERSION} print . --skip-generated -s standard -s default
+	go run github.com/daixiang0/gci@v${GCI_VERSION} write . --skip-generated -s standard -s default
 	go run mvdan.cc/gofumpt@v${GOFUMPT_VERSION} -l -w .
 
 .PHONY: test
