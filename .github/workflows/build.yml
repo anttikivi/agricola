@@ -25,7 +25,7 @@ jobs:
         id: get-version
         shell: bash
         run: |
-          version="$(<version/VERSION)"
+          version="$(<VERSION)"
           version="$(echo "${version}" | sed 's/ //g')"
           echo "version=${version}.${{ github.run_number }}+sha.$(echo "${{ github.sha }}" | cut -c -7)" >> "${GITHUB_OUTPUT}"
 
