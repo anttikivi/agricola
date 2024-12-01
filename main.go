@@ -15,7 +15,6 @@ import (
 	"github.com/anttikivi/agricola/internal/command/version"
 	"github.com/anttikivi/agricola/internal/crash"
 	"github.com/anttikivi/agricola/internal/semver"
-	"github.com/anttikivi/agricola/internal/ui"
 )
 
 const helpCmdName = "help"
@@ -45,7 +44,6 @@ func run() int {
 
 	// TODO: Implement a way to control the verbosity level.
 	alog.Init(2) //nolint:mnd
-	ui.Init()
 
 	ver := parseVersion()
 
@@ -102,8 +100,14 @@ func run() int {
 			cmdName = args[0]
 		}
 
-		ui.Errorf("%s %s: unknown command\n", command.CommandName, cmdName)
-		ui.Errorf("Run '%s help%s' for usage\n", command.CommandName, helpArg)
+		fmt.Fprintf(
+			os.Stderr,
+			"%s %s: unknown command\nRun '%s help%s' for usage\n",
+			command.CommandName,
+			cmdName,
+			command.CommandName,
+			helpArg,
+		)
 
 		return command.ExitInvalidArgs
 	}
@@ -115,7 +119,7 @@ func run() int {
 
 func invoke(cmd *command.Command, args []string) int {
 	if err := cmd.Flag.Parse(args[1:]); err != nil {
-		ui.Errorf("Error parsing command-line flags: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error parsing command-line flags: %v\n", err)
 
 		return command.ExitInvalidArgs
 	}

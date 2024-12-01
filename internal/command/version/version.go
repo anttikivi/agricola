@@ -2,12 +2,12 @@ package version
 
 import (
 	"fmt"
+	"os"
 	"runtime"
 	"strings"
 
 	"github.com/anttikivi/agricola/internal/command"
 	"github.com/anttikivi/agricola/internal/semver"
-	"github.com/anttikivi/agricola/internal/ui"
 )
 
 func Command(ver semver.Version) *command.Command {
@@ -25,7 +25,7 @@ func Command(ver semver.Version) *command.Command {
 }
 
 func runVersion(_ *command.Command, _ []string, ver semver.Version) int {
-	ui.Write(strings.ToLower(command.Name) + " version " + ver.String() + " " + runtime.GOOS + "/" + runtime.GOARCH + "\n")
+	fmt.Fprintln(os.Stdout, strings.ToLower(command.Name)+" version "+ver.String()+" "+runtime.GOOS+"/"+runtime.GOARCH)
 
 	return command.ExitSuccess
 }

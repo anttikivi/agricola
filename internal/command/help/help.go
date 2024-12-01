@@ -1,8 +1,10 @@
 package help
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/anttikivi/agricola/internal/command"
-	"github.com/anttikivi/agricola/internal/ui"
 )
 
 // Help implements the 'help' command.
@@ -12,7 +14,7 @@ func Help(_ []string) int {
 
 // PrintUsage prints the usage for the given command to the user interface.
 func PrintUsage(_ *command.Command) {
-	ui.Error("TODO: Implement.\n")
+	fmt.Fprintln(os.Stderr, "TODO: Implement.")
 }
 
 // outputTemplate writes the given template text with the data from command cmd

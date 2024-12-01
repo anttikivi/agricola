@@ -2,10 +2,10 @@ package command
 
 import (
 	"flag"
+	"fmt"
 	"io"
+	"os"
 	"strings"
-
-	"github.com/anttikivi/agricola/internal/ui"
 )
 
 const (
@@ -99,8 +99,8 @@ func (c *Command) Usage() {
 		panic("(*Command).Usage() should not be called for the base command")
 	}
 
-	ui.Error("usage: " + c.UsageLine + "\n")
-	ui.Error("Run '" + CommandName + " help " + c.LongName() + "' for details.\n")
+	fmt.Fprintln(os.Stderr, "usage: "+c.UsageLine)
+	fmt.Fprintln(os.Stderr, "Run '"+CommandName+" help "+c.LongName()+"' for details.")
 }
 
 func BaseCommand() *Command {
